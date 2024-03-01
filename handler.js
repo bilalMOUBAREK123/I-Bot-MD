@@ -35,7 +35,7 @@ export async function handler(chatUpdate) {
     return;
   }
   if (global.db.data == null) await global.loadDatabase();
-  /* Creditos a Otosaka (https://wa.me/51993966345) */
+  /* Creditos a Otosaka () */
 
   if (global.chatgpt.data === null) await global.loadChatgptDB();
 
@@ -52,7 +52,7 @@ export async function handler(chatUpdate) {
     try {
       // TODO: use loop to insert data instead of this
       const user = global.db.data.users[m.sender];
-      /* Creditos a Otosaka (https://wa.me/51993966345) */
+      /* Creditos a Otosaka () */
 
       const chatgptUser = global.chatgpt.data.users[m.sender];
       if (typeof chatgptUser !== 'object') {
@@ -1179,13 +1179,12 @@ export async function handler(chatUpdate) {
             if (user.bannedMessageCount < 3) {
               const messageNumber = user.bannedMessageCount + 1;
 const messageText = `
-╔═════════════════════╗
- ❰ ⚠️ ❱ *¡USUARIO BANEADO!* ❰ ⚠️ ❱
-—◉ *Aviso ${messageNumber}/3 (Total: 3)*
-—◉ ${user.bannedReason ? `\n*Motivo:* ${user.bannedReason}` : '*Motivo:* Sin especificar'}
-—◉ *Si consideras que esto es un error y cuentas con pruebas, puedes comunicarte con el propietario del Bot para apelar la suspensión.*
-—◉ *Contacto para apelaciones:* wa.me/5219992095479
-╚═════════════════════╝
+*╔═════════════════════╗*
+  *اشعار تنبيه* 【 】
+*•ملاحضه ${messageNumber}/3 (المجموع: 3)*
+*•السبب ${user.bannedReason ? `\n*:* ${user.bannedReason}` : 'غير محدد*'}
+*• تواصل مع المطور ليجد حل لهاذا الخطاء h*
+*╚═════════════════════╝*
                `.trim();
               m.reply(messageText);
               user.bannedMessageCount++;
@@ -1201,7 +1200,7 @@ const messageText = `
             if (user.commandCount === 2) {
               const remainingTime = Math.ceil((user.lastCommandTime + 5000 - Date.now()) / 1000);
               if (remainingTime > 0) {
-                const messageText = `*[ ⚠ ] Espera ${remainingTime} segundos antes de usar otro comando*`;
+                const messageText = `*〖انتضر بضع ${remainingTime} ثواني قبل استخدام امر تاني〗*`;
                 m.reply(messageText);
                 return;
               } else {
@@ -1261,17 +1260,17 @@ const messageText = `
         m.isCommand = true;
         const xp = 'exp' in plugin ? parseInt(plugin.exp) : 17; // XP Earning per command
         if (xp > 200) {
-          m.reply('Ngecit -_-');
+          m.reply('Squealing -_-');
         } // Hehehe
         else {
           m.exp += xp;
         }
         if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-          mconn.conn.reply(m.chat, `*[ 💎 ] Sus diamantes (limites) se han agotado, puede adquirir más con el comando ${usedPrefix}buyall*`, m);
+          mconn.conn.reply(m.chat, `*لقد نفذ الالماس الخاص بك لشراء الالماس💎: ${usedPrefix}buyall*`, m);
           continue; 
         }
         if (plugin.level > _user.level) {
-          mconn.conn.reply(m.chat, `*[ 💠 ] Se require tener el nivel ${plugin.level} para poder usar esté comando. Tú nivel actual es ${_user.level}, usa el comando ${usedPrefix}lvl para subir tu nivel con exp.*`, m);
+          mconn.conn.reply(m.chat, `*عذرا عليك الوصول الى المستوى ${plugin.level} لستخدام هاذا الامر مستواك الحالي هوا ${_user.level}, ${usedPrefix}لرفع مستواك اشرع استخدم اوامر الالعاب*`, m);
           continue; 
         }
         const extra = {
@@ -1340,7 +1339,7 @@ const messageText = `
             }
           }
           if (m.limit) {
-            m.reply('*[ 💎 ] Se utilizarón ' + +m.limit + ' diamante(s) (limites).*');
+            m.reply('*〗💎 تم استخدام' + +m.limit + ' الماس من رصيدك*');
           }
         }
         break;
@@ -1382,7 +1381,7 @@ const messageText = `
         } else {
           stat = stats[m.plugin] = {
             total: 1,
-            success: m.error != null ? 0 : 1,
+           success: m.error != null ? 0 : 1,
             last: now,
             lastSuccess: m.error != null ? 0 : now,
           };
@@ -1397,14 +1396,17 @@ const messageText = `
     }
 
     try {
-      if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this);
-    } catch (e) {
-      console.log(m, m.quoted, e);
+            if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
+        } catch (e) {
+            console.log(m, m.quoted, e)
+        }
+        if (opts['autoread'])
+            await this.readMessages([m.key])
+        
+        if (!m.fromMem && m.text.matc
+        this.sendMessage(m.chat, { react: { text: emot, key: m.key }})}
+        function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]}
     }
-    const settingsREAD = global.db.data.settings[mconn.conn.user.jid] || {};
-    if (opts['autoread']) await mconn.conn.readMessages([m.key]);
-    if (settingsREAD.autoread2) await mconn.conn.readMessages([m.key]);
-  }
 }
 
 /**
@@ -1422,32 +1424,84 @@ export async function participantsUpdate({id, participants, action}) {
   switch (action) {
     case 'add':
     case 'remove':
-      if (chat.welcome && !chat?.isBanned) {
-        const groupMetadata = await m.conn.groupMetadata(id) || (conn.chats[id] || {}).metadata;
-        for (const user of participants) {
-          let pp = './src/avatar_contact.png';
-          try {
-            pp = await m.conn.profilePictureUrl(user, 'image');
-          } catch (e) {
-          } finally {
-            const apii = await m.conn.getFile(pp);
-            const antiArab = JSON.parse(fs.readFileSync('./src/antiArab.json'));
-            const userPrefix = antiArab.some((prefix) => user.startsWith(prefix));
-            const botTt2 = groupMetadata.participants.find((u) => m.conn.decodeJid(u.id) == m.conn.user.jid) || {};
-            const isBotAdminNn = botTt2?.admin === 'admin' || false;
-            text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await m.conn.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '*𝚂𝙸𝙽 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝙲𝙸𝙾𝙽*') :
-                              (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0]);
-            if (userPrefix && chat.antiArab && botTt.restrict && isBotAdminNn && action === 'add') {
-              const responseb = await m.conn.groupParticipantsUpdate(id, [user], 'remove');
-              if (responseb[0].status === '404') return;
-              const fkontak2 = {'key': {'participants': '0@s.whatsapp.net', 'remoteJid': 'status@broadcast', 'fromMe': false, 'id': 'Halo'}, 'message': {'contactMessage': {'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${user.split('@')[0]}:${user.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}, 'participant': '0@s.whatsapp.net'};
-              await m.conn.sendMessage(id, {text: `*[❗] @${user.split('@')[0]} ᴇɴ ᴇsᴛᴇ ɢʀᴜᴘᴏ ɴᴏ sᴇ ᴘᴇʀᴍɪᴛᴇɴ ɴᴜᴍᴇʀᴏs ᴀʀᴀʙᴇs ᴏ ʀᴀʀᴏs, ᴘᴏʀ ʟᴏ ϙᴜᴇ sᴇ ᴛᴇ sᴀᴄᴀʀᴀ ᴅᴇʟ ɢʀᴜᴘᴏ*`, mentions: [user]}, {quoted: fkontak2});
-              return;
+            if (chat.welcome) {
+              let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata;
+              for (let user of participants) {
+let pp, ppgp;
+                try {
+                  pp = await this.profilePictureUrl(user, 'image');
+                  ppgp = await this.profilePictureUrl(id, 'image');
+                } catch (error) {
+                  console.error(`حدث خطأ أثناء استرداد الصورة الشخصية: ${error}`);
+                  pp = 'https://telegra.ph/file/06d3bc73d856d65ab0af0.jpg'; // Assign default image URL
+                  ppgp = 'https://telegra.ph/file/06d3bc73d856d65ab0af0.jpg'; // Assign default image URL
+                } finally {
+                  let text = (chat.sBye || this.bye || conn.bye || 'اهلا, @user')
+                    .replace('@user', '@' + user.split('@')[0]);
+          
+                  let nthMember = groupMetadata.participants.length;
+                  let secondText = `وداعا, رقم ${nthMember}عضونا`;
+laveApiUrl = `https://api.popcat.xyz/welcomecard?background=${encodeURIComponent(
+                    'https://telegra.ph/file/b5d869b2554cf1dc42463.jpg'
+                  )}&text1=${encodeURIComponent(
+                    await this.getName(user)
+                  )}&text2=معه+السلامه&text3=عددنا+حالياً:${encodeURIComponent(
+                    nthMember.toString()
+                  )}&avatar=${encodeURIComponent(pp)}`;
+                  try {
+                    let leaveResponse = await fetch(leaveApiUrl);
+                    let 
+leaveResponse.buffer();
+                     this.sendFile(id, leaveBuffer, 'leave.png', text, null, false, { mentions: [user] });
+                  } catch (error) {
+                    console.error(`حدث خطأ أثناء إنشاء صورة الإجازة: ${error}`);
+                  }
+                }
+              }
             }
-            await m.conn.sendFile(id, apii.data, 'pp.jpg', text, null, false, {mentions: [user]});
-          }
-        }
-      }
+      break;
+      if (chat.welcome) {
+              let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata;
+              for (let user of participants) {
+                let pp, ppgp;
+                try {
+                  pp = await this.profilePictureUrl(user, 'image');
+                  ppgp = await this.profilePictureUrl(id, 'image');
+                } catch (error) {
+                  console.error(`حدث خطأ أثناء استرداد الصورة الشخصية: ${error}`);
+                  pp = 'https://telegra.ph/file/a61c19df9a8edbc51a87f.jpg'; // Assign default image URL
+                  ppgp = 'https://telegra.ph/file/a61c19df9a8edbc51a87f.jpg'; // Assign default image URL
+                } finally {
+                  let text = (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user')
+                    .replace('@group', await this.getName(id))
+                    .replace('@desc', groupMetadata.desc?.toString() || '*لايـوجـد وصـف*')
+                    .replace('@user', '@' + user.split('@')[0]);
+          
+                  let nthMember = groupMetadata.participants.length;
+                  let secondText = `اهلا بك, ${await this.getName(user)}, رقم ${nthMember}العضو`;
+          
+                  let welcomeApiUrl = `https://api.popcat.xyz/welcomecard?background=${encodeURIComponent(
+                    'https://telegra.ph/file/da23374b92a5c26cc6d08.jpg'
+                  )}&text1=${encodeURIComponent(
+                    await this.getName(user)
+                  )}&text2=اهلا+وسهلا+بك&text3=عددنا+حالياً:${encodeURIComponent(
+                    nthMember.toString()
+                  )}&avatar=${encodeURIComponent(pp)}`;
+          
+                  try {
+                    let welcomeResponse = await fetch(welcomeApiUrl);
+                    let welcomeBuffer = await welcomeResponse.buffer();
+          
+                    this.sendFile(id, welcomeBuffer, 'welcome.png', text, null, false, { mentions: [user] });
+                  } catch (error) {
+                    console.error(`حدث خطأ أثناء إنشاء صورة الترحيب: ${error}`);
+                 
+		  }
+		
+                }
+}
+            }
+
       break;
     case 'promote':
     case 'daradmin':
@@ -1482,10 +1536,10 @@ export async function groupsUpdate(groupsUpdate) {
     if (groupUpdate.subjectTime) continue;
     const chats = global.db.data.chats[id]; let text = '';
     if (!chats?.detect) continue;
-    if (groupUpdate.desc) text = (chats.sDesc || this.sDesc || conn.sDesc || '```Description has been changed to```\n@desc').replace('@desc', groupUpdate.desc);
-    if (groupUpdate.subject) text = (chats.sSubject || this.sSubject || conn.sSubject || '```Subject has been changed to```\n@subject').replace('@subject', groupUpdate.subject);
-    if (groupUpdate.icon) text = (chats.sIcon || this.sIcon || conn.sIcon || '```Icon has been changed to```').replace('@icon', groupUpdate.icon);
-    if (groupUpdate.revoke) text = (chats.sRevoke || this.sRevoke || conn.sRevoke || '```Group link has been changed to```\n@revoke').replace('@revoke', groupUpdate.revoke);
+    if (groupUpdate.desc) text = (chats.sDesc || this.sDesc || conn.sDesc || '```*تم تغير الوصف الى*```\n@desc').replace('@desc', groupUpdate.desc);
+    if (groupUpdate.subject) text = (chats.sSubject || this.sSubject || conn.sSubject || '```*تم تغير الموضوع الى*```\n@subject').replace('@subject', groupUpdate.subject);
+    if (groupUpdate.icon) text = (chats.sIcon || this.sIcon || conn.sIcon || '```*تم التغير الى*```').replace('@icon', groupUpdate.icon);
+    if (groupUpdate.revoke) text = (chats.sRevoke || this.sRevoke || conn.sRevoke || '```*تم تغير رابط الجروب*```\n@revoke').replace('@revoke', groupUpdate.revoke);
     if (!text) continue;
     await mconn.conn.sendMessage(id, {text, mentions: mconn.conn.parseMention(text)});
   }
@@ -1497,11 +1551,11 @@ export async function callUpdate(callUpdate) {
   for (const nk of callUpdate) {
     if (nk.isGroup == false) {
       if (nk.status == 'offer') {
-        const callmsg = await mconn.conn.reply(nk.from, `Hola *@${nk.from.split('@')[0]}*, las ${nk.isVideo ? 'videollamadas' : 'llamadas'} no están permitidas, serás bloqueado.\n-\nSi accidentalmente llamaste póngase en contacto con mi creador para que te desbloquee!`, false, {mentions: [nk.from]});
+        const callmsg = await mconn.conn.reply(nk.from, `*مرحبا يا *@${nk.from.split('@')[0]}*, مكالمه ${nk.isVideo ? 'الفيديو غير مسموح بها' : 'المكالمات*'} غير مسموح بها,سيتم حضرك*`, false, {mentions: [nk.from]});
         // let data = global.owner.filter(([id, isCreator]) => id && isCreator)
         // await this.sendContact(nk.from, data.map(([id, name]) => [id, name]), false, { quoted: callmsg })
-        const vcard = `BEGIN:VCARD\nVERSION:3.0\nN:;𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑;;;\nFN:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nORG:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nTITLE:\nitem1.TEL;waid=5219992095479:+521 999 209 5479\nitem1.X-ABLabel:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nX-WA-BIZ-DESCRIPTION:[❗] ᴄᴏɴᴛᴀᴄᴛᴀ ᴀ ᴇsᴛᴇ ɴᴜᴍ ᴘᴀʀᴀ ᴄᴏsᴀs ɪᴍᴘᴏʀᴛᴀɴᴛᴇs.\nX-WA-BIZ-NAME:𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑\nEND:VCARD`;
-        await mconn.conn.sendMessage(nk.from, {contacts: {displayName: '𝐁𝐫𝐮𝐧𝐨 𝐒𝐨𝐛𝐫𝐢𝐧𝐨 👑', contacts: [{vcard}]}}, {quoted: callmsg});
+        const vcard = `*خطاء غير معروف*`;
+        await mconn.conn.sendMessage(nk.from, {contacts: {displayName: '𝐿𝑈𝐹𝐹𝑌-𝐵𝛩𝑇', contacts: [{vcard}]}}, {quoted: callmsg});
         await mconn.conn.updateBlockStatus(nk.from, 'block');
       }
     }
@@ -1521,15 +1575,12 @@ let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'nu
         if (!msg) return 
 	if (!msg?.isGroup) return 
 	const antideleteMessage = `
-┏━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━
-*■ Usuario:* @${participant.split`@`[0]}
-*■ Hora:* ${time}
-*■ Fecha:* ${date}
-*■ Enviando el mensaje eliminado...*
-    
-*■ Para desactivar esta función, escribe el comando:*
-*—◉ #disable antidelete*
-┗━━━━━━━━━⬣  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀  ⬣━━━━━━━━━`.trim();
+*┏━━━━━━━━━⬣ ميزه الحذف التلقائي ⬣━━━━━━━━━*
+*■ المستخدم:* @${participant.split`@`[0]}
+*■ الساعه:* ${time}
+*■ التاريخ:* ${date}
+*■ لتعطيل الميزه اكتب الامر التالي اوقف الحذف..*
+*
         await mconn.conn.sendMessage(msg.chat, {text: antideleteMessage, mentions: [participant]}, {quoted: msg})
         mconn.conn.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
     } catch (e) {
@@ -1539,21 +1590,7 @@ let date = d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'nu
 
 global.dfail = (type, m, conn) => {
   const msg = {
-    rowner: '*[ ⚠️ ] Este comando solo puede ser utilizado por el/la propietario(a) (owner) del Bot.*',
-    owner: '*[ ⚠️ ] Este comando solo puede ser utilizado por el/la propietario(a) (owner) del Bot.*',
-    mods: '*[ ⚠️ ] Este comando solo puede ser utilizado por moderadores y el/la propietario(a) (owner) del Bot.*',
-    premium: '*[ ⚠️ ] Este comando solo puede ser utilizado por usarios premium y el/la propietario(a) (owner) del Bot.*',
-    group: '*[ ⚠️ ] Este comando solo puede ser utilizado en grupos.*',
-    private: '*[ ⚠️ ] Este comando solo puede ser utilizado en el chat privado del Bot.*',
-    admin: '*[ ⚠️ ] Este comando solo puede ser usado por admins del grupo.*',
-    botAdmin: '*[ ⚠️ ] Para poder usar este comando es necesario que yo sea admin.*',
-    unreg: '*[ 🛑 Hey!! Alto, no estas registrado 🛑 ]*\n\n*—◉ Para poder usar este comando debes registrarte, usa el comando:*\n*➣ #verificar nombre.edad*',
-    restrict: '*[ ⚠️ ] Este comando esta restringido/desactivado por desición del propietario(a) (owner) del Bot.*',
-  }[type];
-  const aa = {quoted: m, userJid: conn.user.jid};
-  const prep = generateWAMessageFromContent(m.chat, {extendedTextMessage: {text: msg, contextInfo: {externalAdReply: {title: '[ ⚠ ] 𝐀𝐕𝐈𝐒𝐎 - 𝐀𝐋𝐄𝐑𝐓𝐀', body: 'ᴛʜᴇ ᴍʏsᴛɪᴄ - ʙᴏᴛ', thumbnail: imagen1, sourceUrl: 'https://github.com/BrunoSobrino/TheMystic-Bot-MD'}}}}, aa);
-  if (msg) return conn.relayMessage(m.chat, prep.message, {messageId: prep.key.id});
-};
+
 
 const file = global.__filename(import.meta.url, true);
 watchFile(file, async () => {
